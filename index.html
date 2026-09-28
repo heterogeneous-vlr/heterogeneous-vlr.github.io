@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" class="has-navbar-fixed-top">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HVLR: Unifying Heterogeneous Visual Reasoning in Expressive Latent Space</title>
+  <meta name="description" content="HVLR (Heterogeneous Visual Latent Reasoning) unifies eight distinct visual reasoning forms within a single autoregressive latent interface.">
+  <meta name="keywords" content="HVLR, latent reasoning, visual reasoning, multimodal LLM, vision-language model, Qwen2.5-VL">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://heterogeneous-vlr.github.io/">
+  <meta property="og:title" content="HVLR: Unifying Heterogeneous Visual Reasoning in Expressive Latent Space">
+  <meta property="og:description" content="Eight heterogeneous visual reasoning forms, one shared autoregressive latent space.">
+  <meta property="og:image" content="https://heterogeneous-vlr.github.io/static/images/overview.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <script defer src="static/js/index.js"></script>
+</head>
+<body>
+
+<!-- Icon sprite (Font Awesome Free 5, CC BY 4.0; arXiv logo from Academicons, SIL OFL 1.1) -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-github" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></symbol>
+  <symbol id="i-database" viewBox="0 0 448 512"><path d="M448 73.143v45.714C448 159.143 347.667 192 224 192S0 159.143 0 118.857V73.143C0 32.857 100.333 0 224 0s224 32.857 224 73.143zM448 176v102.857C448 319.143 347.667 352 224 352S0 319.143 0 278.857V176c48.125 33.143 136.208 48.572 224 48.572S399.874 209.143 448 176zm0 160v102.857C448 479.143 347.667 512 224 512S0 479.143 0 438.857V336c48.125 33.143 136.208 48.572 224 48.572S399.874 369.143 448 336z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 0 0 348.118 0H176c-26.51 0-48 21.49-48 48v48H48c-26.51 0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51 0 48-21.49 48-48v-48h80c26.51 0 48-21.49 48-48V99.882a48 48 0 0 0-14.059-33.941zM266 464H54a6 6 0 0 1-6-6V150a6 6 0 0 1 6-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 0 1-6 6zm128-96H182a6 6 0 0 1-6-6V54a6 6 0 0 1 6-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 0 1-6 6zm6-256h-64V48h9.632c1.591 0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 0 1 1.757 4.243V112z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 512 512"><path d="M371.7 238l-176-107c-15.8-8.8-35.7 2.5-35.7 21v208c0 18.4 19.8 29.8 35.7 21l176-101c16.4-9.1 16.4-32.8 0-42zM504 256C504 119 393 8 256 8S8 119 8 256s111 248 248 248 248-111 248-248zm-448 0c0-110.5 89.5-200 200-200s200 89.5 200 200-89.5 200-200 200S56 366.5 56 256z"/></symbol>
+  <symbol id="i-arxiv" viewBox="0 0 448 512"><g transform="matrix(1.5499998,0,0,-1.5499998,-123.19936,553.59966)"><path d="m 119.65,351.996 c -5.84961,0.13477 -11.1943,-3.29883 -13.502,-8.67578 -2.19629,-5.27051 -0.61914,-8.9668 4.19727,-15.8652 7.05469,-10.3799 78.8242,-96.5625 78.8242,-96.5625 l -15.8828,-14.8633 c -13.3809,-13.3779 -13.9561,-31.333 -1.50977,-43.7754 l 18.4922,-17.6133 -51.5977,-63.377 c -4.00586,-4.26758 -6.48535,-11.7559 -4.24805,-17.1309 2.27832,-5.53613 7.69727,-9.12891 13.6836,-9.07031 3.83398,0.0957 7.43262,1.87402 9.83789,4.86133 l 61.3691,57.0566 94.5762,-90.0703 c 3.19434,-3.08398 7.44336,-4.83984 11.8828,-4.91016 1.60449,0.0039 3.19824,0.245117 4.73242,0.714844 5.7793,1.80566 10.249,6.41797 11.8711,12.252 1.2998,5.47363 -0.27637,11.2334 -4.18164,15.2832 l -83.0859,100.011996 14.8789,13.834 c 11.0957,10.0029 11.1543,27.3906 0.12695,37.4688 l -16.2949,15.6309 56.2559,66.4434 0.0742,0.0859 0.0664,0.0899 c 5.02734,6.53125 7.43164,11.5615 4.83984,17.9395 -3.13379,5.96875 -8.69727,10.29 -15.2559,11.8516 -0.67676,0.0908 -1.35938,0.13574 -2.04297,0.13671 l -0.004,-0.0117 c -4.42871,-0.27051 -8.61035,-2.13086 -11.7754,-5.24023 l -0.13086,-0.10743 -0.12304,-0.11132 -65.207,-59.127 -89.8965,86.2402 c 0,0 -5.33398,6.47754 -10.9707,6.61133 z m 178.104,-33.041 c 0.47852,-0.002 0.95703,-0.0332 1.43164,-0.0957 4.84277,-1.33301 8.95605,-4.54004 11.4316,-8.91016 1.44922,-3.5625 1.00293,-6.45703 -4.19727,-13.2148 l -56.0586,-66.2188 -26.375,25.3027 64.9551,58.9062 c 2.33887,2.41504 5.46484,3.91113 8.8125,4.2168 v 0.0137 z M 192.436,227.402 334.446,57.244 c 2.78711,-3.48926 4.5293,-6.97949 3.3418,-10.9121 -1.16113,-4.30273 -4.43457,-7.71777 -8.68555,-9.05664 -1.08105,-0.333984 -2.20508,-0.503906 -3.33594,-0.505859 -3.20801,0.07617 -6.26953,1.35645 -8.57617,3.58789 l -142.033,135.284999 c -11.1719,11.1719 -9.48242,26.0195 1.39258,36.8945 z"/></g></symbol>
+</svg>
+
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item brand-mark" href="#top">HVLR</a>
+    <button type="button" class="navbar-burger" aria-label="Open section menu" aria-expanded="false" aria-controls="nav-menu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="navbar-menu" id="nav-menu">
+    <div class="navbar-start nav-centered">
+      <a class="navbar-item" href="#video">Video</a>
+      <a class="navbar-item" href="#overview">Overview</a>
+      <a class="navbar-item" href="#abstract">Abstract</a>
+      <a class="navbar-item" href="#introduction">Introduction</a>
+      <a class="navbar-item" href="#method">Method</a>
+      <a class="navbar-item" href="#results">Results</a>
+      <a class="navbar-item" href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ============================== Title / authors / links ============================== -->
+<section class="hero" id="top">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">
+            <span class="hvlr-wordmark">HVLR</span>
+          </h1>
+          <h2 class="subtitle is-3 publication-subtitle">
+            Unifying Heterogeneous Visual Reasoning <br class="is-hidden-mobile">in Expressive Latent&nbsp;Space
+          </h2>
+
+          <!-- Authors. TODO: fill in the names of authors 3 and 4 (and their affiliations). -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a href="https://github.com/yangruoliu" target="_blank" rel="noopener">Ruoliu Yang</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://williamium3000.github.io/" target="_blank" rel="noopener">Yijiang Li</a><sup>1</sup>,</span>
+            <span class="author-block"><a href="https://www.luor.org/" target="_blank" rel="noopener">[Author 3]</a>,</span>
+            <span class="author-block"><a href="https://scholar.google.com/citations?user=qoV6OtEAAAAJ&amp;hl=en" target="_blank" rel="noopener">[Author 4]</a>,</span>
+            <span class="author-block"><a href="http://www.svcl.ucsd.edu/people/nuno/" target="_blank" rel="noopener">Nuno Vasconcelos</a><sup>1</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-affiliations">
+            <span class="author-block"><sup>1</sup>University of California, San Diego</span>
+          </div>
+
+          <!-- Links. TODO: replace each href="#" with the real URL and delete its data-placeholder attribute.
+               Code (once public): https://github.com/yangruoliu/heterogeneous-visual-latent-reasoning -->
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="#" data-placeholder class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><svg class="svg-icon svg-icon-arxiv" aria-hidden="true"><use href="#i-arxiv"></use></svg></span>
+                <span>arXiv</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="#" data-placeholder class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><svg class="svg-icon" aria-hidden="true"><use href="#i-github"></use></svg></span>
+                <span>Code</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="#" data-placeholder class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><svg class="svg-icon" aria-hidden="true"><use href="#i-database"></use></svg></span>
+                <span>Data</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="#" data-placeholder class="external-link button is-normal is-rounded is-dark">
+                <span class="icon emoji-icon" aria-hidden="true">🤗</span>
+                <span>Model Weights</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Demo video ============================== -->
+<section class="section pt-2" id="video">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Demo Video</h2>
+    <div class="publication-video">
+      <!-- TODO: replace the placeholder <div> below with ONE of:
+        YouTube:     <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="HVLR demo video" frameborder="0"
+                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                             allowfullscreen></iframe>
+        Self-hosted: <video controls playsinline preload="metadata" poster="static/images/overview.jpg">
+                       <source src="static/videos/demo.mp4" type="video/mp4">
+                     </video>
+      -->
+      <div class="video-placeholder">
+        <svg class="video-placeholder-icon" aria-hidden="true"><use href="#i-play"></use></svg>
+        <p class="video-placeholder-text">Demo video coming soon</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Overview figure ============================== -->
+<section class="section pt-4" id="overview">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Overview</h2>
+    <figure class="paper-figure">
+      <img src="static/images/overview.jpg" width="2400" height="1275"
+           alt="Overview of HVLR: eight heterogeneous reasoning forms (bbox highlight, scene graph, helper image, segmentation, bbox crop, depth, edge, text CoT) are rendered into pixel space and supervise a shared latent space; at inference the MLLM generates latent reasoning states between thinking markers and then the answer.">
+      <figcaption>
+        <b>Overview of HVLR.</b> <i>Top (training):</i> Eight heterogeneous reasoning forms are rendered as helper
+        images and internalized into latent slots. <i>Bottom (inference):</i> Given only the image and question,
+        our model generates latent states for reasoning and then the answer.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================== Abstract ============================== -->
+<section class="section pt-4" id="abstract">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Visual reasoning increasingly relies on heterogeneous intermediate representations, including textual
+            rationales, regions, scene graphs, segmentation, depth, and visual manipulations. Because these
+            representations differ substantially in structure and modality, they are typically modeled with separate
+            reasoning interfaces, which scale poorly as more reasoning forms are incorporated. This raises a fundamental
+            question: can heterogeneous forms of visual reasoning be unified in a single shared latent space? We
+            investigate this question through HVLR (Heterogeneous Visual Latent Reasoning), which unifies eight distinct
+            reasoning forms within a common autoregressive latent interface. To reconcile heterogeneous supervision, we
+            first render all reasoning representations into a shared pixel space and encode them with the same vision
+            encoder. We then use a two-stage distillation procedure to translate these representations into
+            autoregressive latent states and internalize them into a closed-book model that requires no explicit
+            intermediate representation at inference time. We conduct a systematic analysis with HVLR and uncovers three
+            main findings. First, heterogeneous reasoning forms can be effectively unified: combining all eight improves
+            Qwen2.5-VL-7B from 64.66% to 69.97% average accuracy across nine benchmarks. Second, the shared latent space
+            consistently benefits from reasoning diversity. Under a fixed 40K-example budget, increasing the number of
+            reasoning forms from 1 to 3, 5, and 8 improves performance from 66.65% to 67.67%, 68.61%, and 69.97%,
+            respectively, with positive trends across all nine benchmarks. Third, latent reasoning outperforms explicit
+            intermediate decoding while reducing intermediate computation from roughly 177 generated tokens to only 8
+            latent steps, suggesting that continuous latent representations provide a more expressive and efficient
+            medium for heterogeneous visual reasoning.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Introduction ============================== -->
+<section class="section pt-4" id="introduction">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Introduction</h2>
+        <div class="content has-text-justified">
+          <p>
+            Visual reasoning has been approached through increasingly diverse intermediate representations: textual
+            chains of thought, region crops, scene graphs, segmentation and depth maps, and visual manipulations. These
+            forms capture complementary aspects of reasoning, yet because their structures differ so much they are
+            usually modeled separately, each with its own prediction head, decoder or specialized system, which scales
+            poorly as more forms are added. We ask whether heterogeneous forms of visual reasoning can instead be
+            <strong>unified in a single shared latent space</strong>. <strong>HVLR</strong> does this in two steps. It
+            first <strong>renders every reasoning form into a common pixel space</strong> and encodes it with the
+            same vision encoder, giving all eight forms one supervision interface without dedicated heads. It
+            then uses a <strong>two-stage distillation</strong> procedure, a latent teacher followed by a closed-book
+            student, to turn that supervision into autoregressive latent states the model generates by itself, so no
+            explicit intermediate representation is needed at inference. The resulting model improves Qwen2.5-VL-7B
+            from 64.66 to 69.97 average accuracy over nine benchmarks, grows stronger as more reasoning forms share the
+            same data budget, and reasons in 8 latent steps instead of roughly 177 decoded tokens.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Method ============================== -->
+<section class="hero is-light is-small" id="method">
+  <div class="hero-body has-text-centered">
+    <h1 class="title is-1 section-banner">Method</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full content">
+        <h2 class="title is-3 has-text-centered">Unified Pixel-Space Supervision</h2>
+        <p class="has-text-justified">
+          HVLR collects eight representative reasoning forms and rasterizes each of them into a <em>helper image</em>
+          that is processed by the same vision encoder, so linguistic, symbolic, spatial and perceptual reasoning
+          signals can all supervise the same latent space. After curation the corpus contains 1.31M examples; unless
+          otherwise specified, all experiments use the same balanced 40K subset with 5K examples per form.
+        </p>
+        <div class="form-tags" role="list" aria-label="The eight reasoning forms">
+          <span class="tag is-medium form-tag" role="listitem">Text CoT</span>
+          <span class="tag is-medium form-tag" role="listitem">Scene Graph</span>
+          <span class="tag is-medium form-tag" role="listitem">BBox Crop</span>
+          <span class="tag is-medium form-tag" role="listitem">BBox Highlight</span>
+          <span class="tag is-medium form-tag" role="listitem">Segmentation</span>
+          <span class="tag is-medium form-tag" role="listitem">Depth</span>
+          <span class="tag is-medium form-tag" role="listitem">Edge</span>
+          <span class="tag is-medium form-tag" role="listitem">Interleaved</span>
+        </div>
+
+        <h2 class="title is-3 has-text-centered mt-6">Two-Stage Latent Distillation</h2>
+        <figure class="paper-figure">
+          <img src="static/images/method.jpg" width="2400" height="1048" loading="lazy"
+               alt="Training overview. Stage 1 trains a latent teacher MLLM that reads the image, question and helper image, generates teacher latents that are aligned with encoded helper features, and re-inserts them so the answer only sees the helpers through the latents. Stage 2 distills a closed-book student MLLM that generates student latents from the image and question alone.">
+          <figcaption>
+            <b>Training overview.</b> Stage 1 trains a teacher that summarizes the helper images into latent slots.
+            Stage 2 trains a student to generate these latent slots from the image and question alone, supervised by
+            the features exported from the Stage-1 teacher.
+          </figcaption>
+        </figure>
+
+        <div class="columns stage-columns">
+          <div class="column">
+            <div class="box stage-box">
+              <p class="stage-label">Stage 1</p>
+              <p class="stage-title">Latent Teacher</p>
+              <p class="has-text-justified">
+                The teacher reads the helper images and autoregressively generates a block of <i>L</i>&nbsp;=&nbsp;8
+                latent slots per helper, each reusing the previous last-layer hidden state as its next input embedding.
+                The slots are then re-inserted while an attention mask stops the answer from attending to the helpers,
+                so helper information must flow through the latents. A cosine alignment loss ties the latent states to
+                the frozen base model's features of the same helpers.
+              </p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box stage-box">
+              <p class="stage-label">Stage 2</p>
+              <p class="stage-title">Closed-Book Student</p>
+              <p class="has-text-justified">
+                The helpers are removed. A student initialized from the base model learns to regenerate the Stage-1
+                latent states from the original image and question alone, aligned layer by layer to the frozen
+                teacher's states. At inference it receives only the image and question, generates the latent reasoning
+                states, and decodes the answer: no helper image, rationale text or reasoning decoder is needed.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Results ============================== -->
+<section class="hero is-light is-small" id="results">
+  <div class="hero-body has-text-centered">
+    <h1 class="title is-1 section-banner">Experiment Results</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-widescreen">
+
+    <!-- Key numbers -->
+    <div class="columns is-centered highlight-row">
+      <div class="column is-3-desktop is-4-tablet">
+        <div class="box highlight-box">
+          <p class="highlight-number">64.66 → 69.97</p>
+          <p class="highlight-label">average accuracy on nine benchmarks (Qwen2.5-VL-7B → HVLR)</p>
+        </div>
+      </div>
+      <div class="column is-3-desktop is-4-tablet">
+        <div class="box highlight-box">
+          <p class="highlight-number">66.65 → 69.97</p>
+          <p class="highlight-label">1 → 8 reasoning forms under the same 40K-example budget</p>
+        </div>
+      </div>
+      <div class="column is-3-desktop is-4-tablet">
+        <div class="box highlight-box">
+          <p class="highlight-number">~177 → 8</p>
+          <p class="highlight-label">decoded text tokens → latent steps of intermediate reasoning</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main results table -->
+    <div class="columns is-centered result-block">
+      <div class="column is-full has-text-centered content">
+        <h2 class="title is-3">Main Results</h2>
+        <p class="table-intro">
+          Scores (%) on nine benchmarks (POPE is F1; QSpatial++ is the success rate within a factor of two).
+          <b>Bold</b> = best per column among same-protocol rows. Frontier-model rows (gray, <sup>‡</sup>) are
+          reported numbers taken from published papers.
+        </p>
+        <div class="table-container" tabindex="0" role="region" aria-label="Main results table">
+          <table class="results-table" id="main-results">
+            <thead>
+              <tr>
+                <th class="col-model" scope="col">Model</th>
+                <th><abbr title="V* Bench">V<sup>⋆</sup></abbr></th>
+                <th><abbr title="HR-Bench 4K">HR4K</abbr></th>
+                <th><abbr title="HR-Bench 8K">HR8K</abbr></th>
+                <th><abbr title="MME-RealWorld-Lite">MME-RW</abbr></th>
+                <th>BLINK</th>
+                <th>POPE</th>
+                <th><abbr title="RealWorldQA">RWQA</abbr></th>
+                <th><abbr title="CV-Bench">CV-B</abbr></th>
+                <th><abbr title="QSpatial++">QSp++</abbr></th>
+                <th>Avg.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-base">
+                <th class="col-model" scope="row">base (Qwen2.5-VL-7B)</th>
+                <td>75.92</td><td>68.88</td><td>65.25</td><td>45.49</td><td>55.65</td><td>86.58</td><td>69.15</td><td>73.40</td><td>41.58</td><td>64.66</td>
+              </tr>
+              <tr class="row-group"><td colspan="11">Latent Reasoning</td></tr>
+              <tr>
+                <th class="col-model" scope="row">Monet-7B</th>
+                <td>80.85</td><td>70.38</td><td>68.88</td><td>47.06</td><td>41.56</td><td>87.75</td><td>61.05</td><td>51.64</td><td>31.68</td><td>60.09</td>
+              </tr>
+              <tr>
+                <th class="col-model" scope="row">LVR-7B</th>
+                <td>81.18</td><td>70.75</td><td>66.12</td><td>49.56</td><td>53.45</td><td>84.76</td><td>68.10</td><td>75.09</td><td>24.75</td><td>63.75</td>
+              </tr>
+              <tr>
+                <th class="col-model" scope="row">CoVT-7B</th>
+                <td>78.53</td><td>71.00</td><td>69.50</td><td>50.34</td><td>56.35</td><td>84.58</td><td>70.07</td><td>78.75</td><td>53.47</td><td>68.07</td>
+              </tr>
+              <tr>
+                <th class="col-model" scope="row">SkiLa-7B</th>
+                <td><b>82.72</b></td><td>71.12</td><td>64.50</td><td>46.74</td><td>54.87</td><td>87.39</td><td>69.93</td><td>76.19</td><td>40.59</td><td>66.01</td>
+              </tr>
+              <tr>
+                <th class="col-model" scope="row">Mirage-VSP</th>
+                <td>79.06</td><td>70.12</td><td>66.88</td><td>48.31</td><td>56.78</td><td>85.29</td><td>69.93</td><td>75.07</td><td>42.57</td><td>66.00</td>
+              </tr>
+              <tr class="row-group"><td colspan="11">Open-source VLM</td></tr>
+              <tr>
+                <th class="col-model" scope="row">InternVL3-8B</th>
+                <td>70.16</td><td>69.00</td><td>59.00</td><td>47.68</td><td>55.18</td><td>89.00</td><td>70.07</td><td><b>80.98</b></td><td>53.47</td><td>66.06</td>
+              </tr>
+              <tr>
+                <th class="col-model" scope="row">LLaVA-OneVision-7B</th>
+                <td>72.25</td><td>65.12</td><td>58.13</td><td>48.41</td><td>50.55</td><td>88.20</td><td>70.07</td><td>76.32</td><td>51.49</td><td>64.50</td>
+              </tr>
+              <tr class="row-group"><td colspan="11">Tool Using</td></tr>
+              <tr>
+                <th class="col-model" scope="row">DeepEyes-7B</th>
+                <td>82.20</td><td><b>73.62</b></td><td><b>70.88</b></td><td>52.42</td><td>44.29</td><td>87.74</td><td>69.41</td><td>78.59</td><td>44.55</td><td>67.08</td>
+              </tr>
+              <tr>
+                <th class="col-model" scope="row">PixelReasoner-7B</th>
+                <td>78.53</td><td>70.62</td><td>64.50</td><td>45.75</td><td>45.08</td><td>85.97</td><td>69.67</td><td>79.09</td><td>45.54</td><td>64.97</td>
+              </tr>
+              <tr class="row-group"><td colspan="11">Frontier Closed-Source Models</td></tr>
+              <tr class="row-frontier">
+                <th class="col-model" scope="row">GPT-5<sup>‡</sup></th>
+                <td>74.87</td><td>74.6</td><td>71.62</td><td>57.0</td><td>71.0</td><td>—</td><td>82.8</td><td>—</td><td>63.37</td><td>—</td>
+              </tr>
+              <tr class="row-frontier">
+                <th class="col-model" scope="row">GPT-4o<sup>‡</sup></th>
+                <td>62.8</td><td>68.0</td><td>63.9</td><td>51.6</td><td>60.0</td><td>86.9</td><td>75.4</td><td>79.4</td><td>61.06</td><td>—</td>
+              </tr>
+              <tr class="row-frontier">
+                <th class="col-model" scope="row">Gemini-2.5-Pro<sup>‡</sup></th>
+                <td>79.2</td><td>87.3</td><td>83.62</td><td>58.30</td><td>70.6</td><td>—</td><td>78.0</td><td>86.3</td><td>40.59</td><td>—</td>
+              </tr>
+              <tr class="row-ours">
+                <th class="col-model" scope="row"><b>HVLR (Ours)</b></th>
+                <td>81.70</td><td>71.75</td><td><b>70.88</b></td><td><b>54.30</b></td><td><b>56.85</b></td><td><b>89.19</b></td><td><b>72.03</b></td><td>78.53</td><td><b>54.46</b></td><td><b>69.97</b></td>
+              </tr>
+              <tr class="row-delta">
+                <th class="col-model" scope="row">Δ vs. base</th>
+                <td>+5.78</td><td>+2.87</td><td>+5.63</td><td>+8.81</td><td>+1.20</td><td>+2.61</td><td>+2.88</td><td>+5.13</td><td>+12.88</td><td>+5.31</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note has-text-justified">
+          HVLR improves on its base and attains the highest average score among all same-protocol rows, +1.9 above the
+          best latent-reasoning baseline (CoVT-7B). It also exceeds the best tool-using agent, DeepEyes, with a single
+          closed-book pass instead of a multi-pass zoom-in loop.
+        </p>
+      </div>
+    </div>
+
+    <!-- Finding 1 -->
+    <div class="columns is-centered result-block">
+      <div class="column is-full has-text-centered content">
+        <h2 class="title is-3">Finding ❶: More Forms, Stronger Model</h2>
+        <div class="box finding-box">
+          <p class="finding-claim">
+            The capability of latent reasoning scales with the diversity of the content the space must host: packing
+            more forms of thought in one latent space yields a stronger model.
+          </p>
+          <a class="figure-link" href="static/images/finding1_diversity.png" target="_blank" rel="noopener" title="Open full-size figure">
+            <img src="static/images/finding1_diversity.png" width="1348" height="497" loading="lazy"
+                 alt="Three plots: (a) average score rises with the number of reasoning forms K from 1 to 8; (b) all 25 ablations plus base ranked by average score, with the 8-form model first and base last; (c) the per-benchmark slope against K is positive on all nine benchmarks.">
+          </a>
+          <p class="finding-caption has-text-justified">
+            With a fixed 40K budget, we vary the number of forms <i>K</i> (8 single-form models, 8 random
+            combinations each for <i>K</i>=3 and <i>K</i>=5, and the full <i>K</i>=8 model). <b>(a)</b> The tier-mean
+            average score rises monotonically with <i>K</i> (OLS +0.483 points per form, Spearman ρ=0.88).
+            <b>(b)</b> Ranking all 25 ablations plus base by average score, the 8-form model ranks first, the eight
+            random <i>K</i>=5 subsets occupy ranks 2–9, and base ranks last.
+            <b>(c)</b> Refitting the slope on each benchmark separately gives a positive trend on all nine.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 2 -->
+    <div class="columns is-centered result-block">
+      <div class="column is-full has-text-centered content">
+        <h2 class="title is-3">Finding ❷: Latent Beats Decoded Text</h2>
+        <div class="box finding-box">
+          <p class="finding-claim">
+            Keeping intermediate thought in the latent space dominates decoding it into text: carried in vectors, the
+            same reasoning reaches higher accuracy at a fraction of the inference cost.
+          </p>
+          <a class="figure-link" href="static/images/finding2_latent_vs_text.png" target="_blank" rel="noopener" title="Open full-size figure">
+            <img src="static/images/finding2_latent_vs_text.png" width="1348" height="471" loading="lazy"
+                 alt="Three plots comparing latent and decoded-text reasoning: (a) average score of variants that supervise text CoT, scene graph or both as explicit text, under free routing, forced latent and forced text decoding, all below the all-latent model; (b) the same runs against think steps; (c) think tokens per question: Ours 9, SkiLa 29.3, Monet 129.1, PixelReasoner 159.5, DeepEyes 179.6.">
+          </a>
+          <p class="finding-caption has-text-justified">
+            Three variants supervise the text-CoT portion, the scene-graph portion, or both as decoded text while all
+            other forms stay latent. <b>(a)</b> No variant reaches the all-latent model (dashed line) under any
+            inference mode. <b>(b)</b> The latent block takes 8 think steps per question against roughly 177 for a
+            decoded text CoT. <b>(c)</b> Think tokens per question across methods.
+          </p>
+          <a class="figure-link" href="static/images/finding2_efficiency.png" target="_blank" rel="noopener" title="Open full-size figure">
+            <img class="mt-4" src="static/images/finding2_efficiency.png" width="1431" height="493" loading="lazy"
+                 alt="Inference efficiency: (a) wall-clock latency per question relative to ours, from 1.00x for ours to 5.42x for SkiLa-7B; (b) decode TFLOPs, 0.294 for ours; (c) five-benchmark accuracy against latency, where every other method is slower and less accurate than ours.">
+          </a>
+          <p class="finding-caption has-text-justified">
+            Inference efficiency on V<sup>⋆</sup>, HR-Bench 4K/8K, RealWorldQA and QSpatial++. <b>(a)</b> Latency per
+            question, with the ratio to ours. <b>(b)</b> Decode FLOPs computed from token counts; all methods share one
+            backbone. <b>(c)</b> Mean accuracy over the five benchmarks against latency: every other method is both
+            slower and less accurate than ours.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finding 3 -->
+    <div class="columns is-centered result-block">
+      <div class="column is-full has-text-centered content">
+        <h2 class="title is-3">Finding ❸: Gains Transfer Across Backbones and Recipes</h2>
+        <div class="box finding-box">
+          <p class="finding-claim">
+            The benefit of heterogeneous latent supervision transfers across model scales, backbones, and training
+            recipes.
+          </p>
+          <div class="columns is-centered">
+            <div class="column is-half">
+              <p class="mini-table-title">Qwen2.5-VL-3B</p>
+              <div class="table-container" tabindex="0" role="region" aria-label="Qwen2.5-VL-3B results">
+                <table class="results-table mini-table">
+                  <thead>
+                    <tr><th class="col-model" scope="col">Model</th><th>CV-Bench</th><th>MME-RW</th><th>QSpatial++</th><th>POPE</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th class="col-model" scope="row">base</th><td>59.22</td><td>42.31</td><td>52.48</td><td>86.31</td></tr>
+                    <tr class="row-ours"><th class="col-model" scope="row">ours</th><td>69.91</td><td>48.93</td><td>58.42</td><td>87.96</td></tr>
+                    <tr class="row-delta"><th class="col-model" scope="row">Δ</th><td>+10.69</td><td>+6.62</td><td>+5.94</td><td>+1.65</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="column is-half">
+              <p class="mini-table-title">Qwen3-VL-8B</p>
+              <div class="table-container" tabindex="0" role="region" aria-label="Qwen3-VL-8B results">
+                <table class="results-table mini-table">
+                  <thead>
+                    <tr><th class="col-model" scope="col">Model</th><th>QSpatial++</th><th>MME-RW</th><th>V<sup>⋆</sup></th><th>HR8K</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><th class="col-model" scope="row">base</th><td>51.49</td><td>49.82</td><td>80.10</td><td>70.25</td></tr>
+                    <tr class="row-ours"><th class="col-model" scope="row">ours</th><td>64.36</td><td>55.97</td><td>83.77</td><td>71.88</td></tr>
+                    <tr class="row-delta"><th class="col-model" scope="row">Δ</th><td>+12.87</td><td>+6.15</td><td>+3.67</td><td>+1.63</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <p class="finding-caption has-text-justified">
+            The same data and training stages also improve a smaller (Qwen2.5-VL-3B) and a newer (Qwen3-VL-8B)
+            backbone. A modified LVR-style recipe that shares only our data and latent interface, trained on 500K
+            examples of our corpus, gains 3.47 points of average score over its base and surpasses the publicly
+            released LVR checkpoint by 5.03 points.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================== BibTeX ============================== -->
+<section class="hero is-light is-small">
+  <div class="hero-body has-text-centered">
+    <h1 class="title is-1 section-banner">Citation</h1>
+  </div>
+</section>
+
+<section class="section" id="bibtex">
+  <div class="container is-max-desktop content">
+    <!-- TODO: update the author list and arXiv ID once available. -->
+    <div class="bibtex-wrapper">
+      <button class="button is-small copy-bibtex" type="button" title="Copy BibTeX to clipboard">
+        <span class="icon is-small"><svg class="svg-icon" aria-hidden="true"><use href="#i-copy"></use></svg></span>
+        <span class="copy-label">Copy</span>
+      </button>
+      <pre tabindex="0"><code id="bibtex-code">@article{yang2026hvlr,
+  title   = {Unifying Heterogeneous Visual Reasoning in Expressive Latent Space},
+  author  = {Yang, Ruoliu and Li, Yijiang and [Author 3] and [Author 4] and Vasconcelos, Nuno},
+  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  year    = {2026}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="columns is-centered">
+    <div class="column is-8">
+      <div class="content has-text-centered">
+        <p>
+          This website is adapted from the <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> project
+          page template, as used by <a href="https://video-mme.github.io/home_page.html">Video-MME</a>, and is licensed
+          under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons
+          Attribution-ShareAlike 4.0 International License</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+</body>
+</html>

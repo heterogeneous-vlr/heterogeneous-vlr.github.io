@@ -1,0 +1,563 @@
+/* HVLR project page. Layout follows the Nerfies / Video-MME Bulma template. */
+
+:root {
+  --hvlr-orange: #e0875a;
+  --hvlr-orange-light: #fbeee6;
+  --hvlr-blue: #1f5f8b;
+  --hvlr-blue-dark: #1c3d5a;
+  --hvlr-text-muted: #6b6b6b;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+  background-color: #ffffff;
+  color: #363636;
+}
+
+[id] {
+  scroll-margin-top: 4rem;
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: -0.125em;
+}
+
+/* ---------------- Navbar ---------------- */
+.navbar {
+  border-bottom: 1px solid #ececec;
+}
+
+.navbar .brand-mark {
+  font-family: 'Google Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  color: var(--hvlr-blue-dark);
+}
+
+.navbar .nav-centered {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.navbar a.navbar-item {
+  font-family: 'Google Sans', sans-serif;
+}
+
+.navbar a.navbar-item:hover {
+  color: var(--hvlr-blue);
+}
+
+/* ---------------- Title block ---------------- */
+.publication-title,
+.publication-subtitle,
+.publication-authors,
+.publication-affiliations {
+  font-family: 'Google Sans', sans-serif;
+}
+
+.publication-title {
+  margin-bottom: 0.75rem !important;
+}
+
+.hvlr-wordmark {
+  display: inline-block;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  background: linear-gradient(90deg, var(--hvlr-orange) 0%, #c7706a 45%, var(--hvlr-blue) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.publication-subtitle {
+  color: #2f2f2f;
+  text-wrap: balance;
+  line-height: 1.35;
+  margin-bottom: 1.5rem !important;
+}
+
+.publication-authors {
+  margin: 0 auto 0.4rem;
+}
+
+.publication-authors a {
+  color: hsl(204, 86%, 40%) !important;
+}
+
+.publication-authors a:hover {
+  text-decoration: underline;
+}
+
+.author-block {
+  display: inline-block;
+  margin: 0 0.2rem;
+}
+
+.publication-affiliations {
+  color: #4a4a4a;
+  margin-bottom: 1.25rem;
+}
+
+.publication-links {
+  margin-top: 0.5rem;
+}
+
+.link-block a {
+  margin: 5px 3px;
+}
+
+.emoji-icon {
+  font-size: 1.1em;
+}
+
+/* ---------------- Demo video ---------------- */
+.publication-video {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+  background: #111;
+}
+
+.publication-video iframe,
+.publication-video video,
+.publication-video .video-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 20%, #2c5578 0%, #1c2f44 55%, #121c28 100%);
+  color: #ffffff;
+}
+
+.video-placeholder-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  fill: rgba(255, 255, 255, 0.85);
+}
+
+.video-placeholder-text {
+  margin-top: 0.9rem;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------------- Figures ---------------- */
+.paper-figure,
+.content figure.paper-figure {
+  margin: 1.25rem 0 0.5rem;
+  text-align: center;
+}
+
+.paper-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.paper-figure figcaption,
+.content figure.paper-figure figcaption {
+  margin-top: 0.9rem;
+  font-size: 0.95rem;
+  color: #4a4a4a;
+  text-align: justify;
+  font-style: normal;
+}
+
+/* ---------------- Section banners (grey hero bars) ---------------- */
+.section-banner {
+  font-variant: small-caps;
+  font-weight: bold;
+}
+
+/* ---------------- Method ---------------- */
+.form-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.tag.form-tag {
+  background-color: var(--hvlr-orange-light);
+  color: #9a4a22;
+  border: 1px solid #f1cdb7;
+  font-family: 'Google Sans', sans-serif;
+  font-weight: 500;
+}
+
+.stage-columns {
+  margin-top: 1rem;
+}
+
+.stage-box {
+  height: 100%;
+  border-top: 4px solid var(--hvlr-blue);
+}
+
+.stage-columns .column:last-child .stage-box {
+  border-top-color: var(--hvlr-orange);
+}
+
+.stage-label {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hvlr-text-muted);
+  margin-bottom: 0.1rem !important;
+}
+
+.stage-title {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2f2f2f;
+  margin-bottom: 0.6rem !important;
+}
+
+/* ---------------- Results: highlight numbers ---------------- */
+.columns.highlight-row:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.highlight-box {
+  height: 100%;
+  text-align: center;
+}
+
+.highlight-number {
+  font-family: 'Google Sans', sans-serif;
+  white-space: nowrap;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--hvlr-blue);
+  margin-bottom: 0.4rem;
+}
+
+.highlight-label {
+  font-size: 0.95rem;
+  color: #555555;
+}
+
+/* ---------------- Results: tables ---------------- */
+.table-intro {
+  color: #4a4a4a;
+}
+
+.table-container,
+.table-container:not(:last-child) {
+  margin: 0 auto;
+}
+
+.content table.results-table {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 15px;
+  border-collapse: collapse;
+  margin: 1rem auto 1.25rem;
+  width: 100%;
+  text-align: center;
+}
+
+.content table.results-table th,
+.content table.results-table td {
+  border: 1px solid #dddddd;
+  padding: 7px 9px;
+  vertical-align: middle;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.content table.results-table thead th {
+  background-color: #dddddd;
+  color: #363636;
+  font-weight: 700;
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+.content table.results-table thead th abbr {
+  text-decoration: none;
+  cursor: help;
+}
+
+.content table.results-table td.col-model,
+.content table.results-table th.col-model {
+  text-align: left;
+}
+
+.content table.results-table tbody th.col-model {
+  font-weight: 400;
+  color: inherit;
+}
+
+.content table.results-table tbody tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.content table.results-table tbody tr:hover {
+  background-color: #ececec;
+}
+
+.content table.results-table tr.row-group td {
+  background-color: #eef1f5;
+  color: #555555;
+  font-style: italic;
+  font-weight: 600;
+  text-align: left;
+  font-size: 14px;
+}
+
+.content table.results-table tr.row-frontier td,
+.content table.results-table tr.row-frontier th {
+  color: #6b6b6b;
+  font-style: italic;
+}
+
+.content table.results-table tr.row-ours td,
+.content table.results-table tr.row-ours th {
+  background-color: var(--hvlr-orange-light);
+}
+
+.content table.results-table tr.row-delta td,
+.content table.results-table tr.row-delta th {
+  color: #1a7f4b;
+  font-size: 14px;
+}
+
+.table-note {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.mini-table-title {
+  font-family: 'Google Sans', sans-serif;
+  font-weight: 700;
+  margin-bottom: 0 !important;
+}
+
+.content table.results-table.mini-table {
+  font-size: 14px;
+  margin-top: 0.5rem;
+}
+
+/* ---------------- Results: finding boxes ---------------- */
+.finding-box {
+  margin: 0.5rem 0 1rem;
+}
+
+.finding-box img {
+  display: block;
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  margin: 0.75rem auto 0;
+}
+
+.figure-link {
+  display: block;
+  cursor: zoom-in;
+}
+
+.result-block {
+  margin-top: 2rem;
+}
+
+.finding-claim {
+  font-style: italic;
+  color: #3a3a3a;
+  border-left: 4px solid var(--hvlr-orange);
+  background: #fdf7f3;
+  padding: 0.7rem 1rem;
+  text-align: left;
+  border-radius: 0 6px 6px 0;
+}
+
+.finding-caption {
+  font-size: 0.95rem;
+  color: #4a4a4a;
+  margin-top: 0.75rem;
+}
+
+/* ---------------- BibTeX ---------------- */
+.bibtex-wrapper {
+  position: relative;
+}
+
+.bibtex-wrapper pre {
+  background-color: #f4f4f4;
+  padding: 1rem 1.25rem;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+.bibtex-wrapper code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.9rem;
+  color: #4a4a4a;
+  background: transparent;
+  padding: 0;
+}
+
+.copy-bibtex {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+}
+
+/* ---------------- Toast ---------------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translate(-50%, 1rem);
+  background: rgba(30, 30, 30, 0.92);
+  color: #ffffff;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 50;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------------- Footer ---------------- */
+.footer .content {
+  font-size: 0.9rem;
+  color: #555555;
+}
+
+.footer .content a {
+  text-decoration: underline;
+}
+
+/* ---------------- Medium screens ---------------- */
+@media screen and (min-width: 769px) and (max-width: 1215px) {
+  .highlight-number {
+    font-size: 1.45rem;
+  }
+}
+
+/* ---------------- Small screens ---------------- */
+@media screen and (max-width: 768px) {
+  .has-text-justified,
+  .paper-figure figcaption,
+  .content figure.paper-figure figcaption {
+    text-align: left !important;
+  }
+
+  .finding-box {
+    padding: 0.75rem;
+  }
+
+  .content table.results-table.mini-table {
+    font-size: 12px;
+  }
+
+  .content table.results-table.mini-table th,
+  .content table.results-table.mini-table td {
+    padding: 4px 5px;
+  }
+
+  .bibtex-wrapper pre {
+    padding-top: 2.75rem;
+  }
+
+  .result-block {
+    margin-top: 1rem;
+  }
+
+  .hvlr-wordmark {
+    font-size: 2.8rem;
+  }
+
+  .publication-subtitle.is-3 {
+    font-size: 1.45rem;
+  }
+
+  .publication-authors.is-size-5,
+  .publication-affiliations.is-size-5 {
+    font-size: 1.05rem !important;
+  }
+
+  .section-banner.is-1 {
+    font-size: 2.2rem;
+  }
+
+  .highlight-number {
+    font-size: 1.6rem;
+  }
+
+  .content table.results-table {
+    font-size: 13px;
+  }
+
+  .content table.results-table th,
+  .content table.results-table td {
+    padding: 5px 6px;
+  }
+}
+
+.svg-icon-arxiv {
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.2em;
+}
+
+/* Bulma drops the bottom border of the last row inside .content tables. */
+.content table.results-table tbody tr:last-child td {
+  border-bottom-width: 1px;
+}
+
+.navbar-burger {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .toast {
+    transition: none;
+  }
+}
