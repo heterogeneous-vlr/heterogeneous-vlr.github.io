@@ -34,7 +34,6 @@ Search `index.html` for `TODO`:
 
 | What | Where |
 | --- | --- |
-| Affiliations of Haozheng Luo and Yixuan Wang | author block and affiliation line |
 | arXiv / Code / Data / Model Weights URLs | the four buttons under the authors: replace `href="#"` and delete `data-placeholder` |
 | Demo video | the `#video` section: replace the placeholder `<div>` with the YouTube `<iframe>` or the `<video>` template in the comment (put a self-hosted file at `static/videos/demo.mp4`) |
 | arXiv ID | `#bibtex` section |
