@@ -309,28 +309,6 @@
 <section class="section">
   <div class="container is-max-widescreen">
 
-    <!-- Key numbers -->
-    <div class="columns is-centered highlight-row">
-      <div class="column is-3-desktop is-4-tablet">
-        <div class="box highlight-box">
-          <p class="highlight-number">64.66 → 69.97</p>
-          <p class="highlight-label">average accuracy on nine benchmarks (Qwen2.5-VL-7B → HVLR)</p>
-        </div>
-      </div>
-      <div class="column is-3-desktop is-4-tablet">
-        <div class="box highlight-box">
-          <p class="highlight-number">66.65 → 69.97</p>
-          <p class="highlight-label">1 → 8 reasoning forms under the same 40K-example budget</p>
-        </div>
-      </div>
-      <div class="column is-3-desktop is-4-tablet">
-        <div class="box highlight-box">
-          <p class="highlight-number">~177 → 8</p>
-          <p class="highlight-label">decoded text tokens → latent steps of intermediate reasoning</p>
-        </div>
-      </div>
-    </div>
-
     <!-- Main results table -->
     <div class="columns is-centered result-block">
       <div class="column is-full has-text-centered content">
@@ -436,7 +414,8 @@
     <!-- Finding 1 -->
     <div class="columns is-centered result-block">
       <div class="column is-full has-text-centered content">
-        <h2 class="title is-3">Finding ❶: More Forms, Stronger Model</h2>
+        <p class="finding-label">Finding ❶</p>
+        <h2 class="title is-3">More Forms, Stronger Model: Capability Scales with Latent Diversity</h2>
         <div class="box finding-box">
           <p class="finding-claim">
             The capability of latent reasoning scales with the diversity of the content the space must host: packing
@@ -461,7 +440,8 @@
     <!-- Finding 2 -->
     <div class="columns is-centered result-block">
       <div class="column is-full has-text-centered content">
-        <h2 class="title is-3">Finding ❷: Latent Beats Decoded Text</h2>
+        <p class="finding-label">Finding ❷</p>
+        <h2 class="title is-3">Latent Reasoning Is More Effective and More Efficient than Decoded Text</h2>
         <div class="box finding-box">
           <p class="finding-claim">
             Keeping intermediate thought in the latent space dominates decoding it into text: carried in vectors, the
@@ -495,12 +475,14 @@
     <!-- Finding 3 -->
     <div class="columns is-centered result-block">
       <div class="column is-full has-text-centered content">
-        <h2 class="title is-3">Finding ❸: Gains Transfer Across Backbones and Recipes</h2>
+        <p class="finding-label">Finding ❸</p>
+        <h2 class="title is-3">The Gains Transfer across Backbones and Recipes</h2>
         <div class="box finding-box">
           <p class="finding-claim">
             The benefit of heterogeneous latent supervision transfers across model scales, backbones, and training
             recipes.
           </p>
+          <h3 class="title is-5 finding-subtitle">Cross-backbone transfer</h3>
           <div class="columns is-centered">
             <div class="column is-half">
               <p class="mini-table-title">Qwen2.5-VL-3B</p>
@@ -535,9 +517,48 @@
           </div>
           <p class="finding-caption has-text-justified">
             The same data and training stages also improve a smaller (Qwen2.5-VL-3B) and a newer (Qwen3-VL-8B)
-            backbone. A modified LVR-style recipe that shares only our data and latent interface, trained on 500K
-            examples of our corpus, gains 3.47 points of average score over its base and surpasses the publicly
-            released LVR checkpoint by 5.03 points.
+            backbone.
+          </p>
+
+          <h3 class="title is-5 finding-subtitle">Cross-recipe transfer</h3>
+          <p class="finding-caption has-text-justified">
+            We adapt LVR into a pipeline that shares only the data and the latent interface with ours. Training is a
+            single teacher-forced stage without distillation: the rendered helper's visual features fill the latent
+            slots as inputs, and a trainable prediction head predicts each slot from the hidden state at the preceding
+            position, trained with an alignment loss, the answer cross-entropy and a contrastive term that keeps the
+            latents sample-specific. At inference the helper is absent and the head generates the latent slots
+            autoregressively.
+          </p>
+          <a class="figure-link lvr-figure" href="static/images/lvr_style.jpg" target="_blank" rel="noopener" title="Open full-size figure">
+            <img src="static/images/lvr_style.jpg" width="1600" height="901" loading="lazy"
+                 alt="LVR-style training pipeline. Top: the image and question go into the MLLM, which produces latents z1 to zm and then the answer; the helper image is encoded by a visual encoder into helper features that supervise the latents. Bottom: like token prediction from a hidden state through the LM head, an LVR head (GLU) predicts each latent from the preceding hidden state and is trained with an alignment loss against the helper feature.">
+          </a>
+          <p class="finding-caption has-text-justified">
+            <b>LVR-style training pipeline.</b> <i>Top (Overview):</i> Helper image is encoded by visual encoder as
+            ground truth to supervise latent. <i>Bottom (Details):</i> latent is predicted from preceding hidden state
+            like a text token.
+          </p>
+          <div class="table-container" tabindex="0" role="region" aria-label="Cross-recipe transfer results">
+            <table class="results-table mini-table lvr-table">
+              <thead>
+                <tr>
+                  <th class="col-model" scope="col">Model</th><th>V<sup>⋆</sup></th><th>MME-RW</th><th>BLINK</th><th>POPE</th>
+                  <th>RWQA</th><th>CV-Bench</th><th>QSpatial++</th><th>Avg.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th class="col-model" scope="row">base (Qwen2.5-VL-7B)</th><td>75.92</td><td>45.49</td><td>55.65</td><td>86.58</td><td>69.15</td><td>73.40</td><td>41.58</td><td>63.97</td></tr>
+                <tr><th class="col-model" scope="row">LVR-7B</th><td>81.18</td><td><b>49.56</b></td><td>53.45</td><td>84.76</td><td>68.10</td><td>75.09</td><td>24.75</td><td>62.41</td></tr>
+                <tr class="row-ours"><th class="col-model" scope="row"><b>LVR-style + our data</b></th><td><b>82.72</b></td><td>49.40</td><td><b>56.13</b></td><td><b>87.21</b></td><td><b>70.85</b></td><td><b>78.26</b></td><td><b>47.52</b></td><td><b>67.44</b></td></tr>
+                <tr class="row-delta"><th class="col-model" scope="row">Δ vs. base</th><td>+6.80</td><td>+3.91</td><td>+0.48</td><td>+0.63</td><td>+1.70</td><td>+4.86</td><td>+5.94</td><td>+3.47</td></tr>
+                <tr class="row-delta"><th class="col-model" scope="row">Δ vs. LVR-7B</th><td>+1.54</td><td class="is-negative">−0.16</td><td>+2.68</td><td>+2.45</td><td>+2.75</td><td>+3.17</td><td>+22.77</td><td>+5.03</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="finding-caption has-text-justified">
+            A modified LVR-style recipe trained on our dataset, against its base and against the publicly released LVR
+            checkpoint. Trained on 500K examples of our corpus, this pipeline gains 3.47 points of average score over its
+            base and surpasses the publicly released LVR checkpoint by 5.03 points, most notably on QSpatial++.
           </p>
         </div>
       </div>
