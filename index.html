@@ -146,8 +146,10 @@
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Overview</h2>
     <figure class="paper-figure">
-      <img src="static/images/overview.jpg" width="2400" height="1275"
-           alt="Overview of HVLR: eight heterogeneous reasoning forms (bbox highlight, scene graph, helper image, segmentation, bbox crop, depth, edge, text CoT) are rendered into pixel space and supervise a shared latent space; at inference the MLLM generates latent reasoning states between thinking markers and then the answer.">
+      <a class="figure-link" href="static/images/overview.jpg" target="_blank" rel="noopener" title="Open full-size figure">
+        <img src="static/images/overview.jpg" width="2400" height="1275"
+             alt="Overview of HVLR: eight heterogeneous reasoning forms (bbox highlight, scene graph, helper image, segmentation, bbox crop, depth, edge, text CoT) are rendered into pixel space and supervise a shared latent space; at inference the MLLM generates latent reasoning states between thinking markers and then the answer.">
+      </a>
       <figcaption>
         <b>Overview of HVLR.</b> <i>Top (training):</i> Eight heterogeneous reasoning forms are rendered as helper
         images and internalized into latent slots. <i>Bottom (inference):</i> Given only the image and question,
@@ -234,7 +236,9 @@
         <p class="has-text-justified">
           HVLR collects eight representative reasoning forms and rasterizes each of them into a <em>helper image</em>
           that is processed by the same vision encoder, so linguistic, symbolic, spatial and perceptual reasoning
-          signals can all supervise the same latent space. After curation the corpus contains 1.31M examples; unless
+          signals can all supervise the same latent space. Interleaved reasoning (labelled "Helper Image" in the
+          overview figure) contributes one to three intermediate images. After curation the corpus contains 1.31M
+          examples; unless
           otherwise specified, all experiments use the same balanced 40K subset with 5K examples per form.
         </p>
         <div class="form-tags" role="list" aria-label="The eight reasoning forms">
@@ -250,8 +254,10 @@
 
         <h2 class="title is-3 has-text-centered mt-6">Two-Stage Latent Distillation</h2>
         <figure class="paper-figure">
-          <img src="static/images/method.jpg" width="2400" height="1048" loading="lazy"
-               alt="Training overview. Stage 1 trains a latent teacher MLLM that reads the image, question and helper image, generates teacher latents that are aligned with encoded helper features, and re-inserts them so the answer only sees the helpers through the latents. Stage 2 distills a closed-book student MLLM that generates student latents from the image and question alone.">
+          <a class="figure-link" href="static/images/method.jpg" target="_blank" rel="noopener" title="Open full-size figure">
+            <img src="static/images/method.jpg" width="2400" height="1048" loading="lazy"
+                 alt="Training overview. Stage 1 trains a latent teacher MLLM that reads the image, question and helper image, generates teacher latents that are aligned with encoded helper features, and re-inserts them so the answer only sees the helpers through the latents. Stage 2 distills a closed-book student MLLM that generates student latents from the image and question alone.">
+          </a>
           <figcaption>
             <b>Training overview.</b> Stage 1 trains a teacher that summarizes the helper images into latent slots.
             Stage 2 trains a student to generate these latent slots from the image and question alone, supervised by
@@ -467,7 +473,8 @@
             Three variants supervise the text-CoT portion, the scene-graph portion, or both as decoded text while all
             other forms stay latent. <b>(a)</b> No variant reaches the all-latent model (dashed line) under any
             inference mode. <b>(b)</b> The latent block takes 8 think steps per question against roughly 177 for a
-            decoded text CoT. <b>(c)</b> Think tokens per question across methods.
+            decoded text CoT. <b>(c)</b> Think tokens per question across methods (ours: the 8 latent steps occupy 9
+            sequence positions).
           </p>
           <a class="figure-link" href="static/images/finding2_efficiency.png" target="_blank" rel="noopener" title="Open full-size figure">
             <img class="mt-4" src="static/images/finding2_efficiency.png" width="1431" height="493" loading="lazy"

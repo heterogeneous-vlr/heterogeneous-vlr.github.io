@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 1800);
   }
 
-  // Links that are not released yet (marked with data-placeholder).
-  document.querySelectorAll('a[data-placeholder]').forEach(function (link) {
+  // Links that are not released yet: data-placeholder and still href="#".
+  document.querySelectorAll('a[data-placeholder][href="#"]').forEach(function (link) {
     link.setAttribute('title', 'Coming soon');
     link.addEventListener('click', function (event) {
       event.preventDefault();
