@@ -11,7 +11,8 @@ index.html                 the page
 static/css/bulma.min.css   Bulma 0.9 (vendored)
 static/css/index.css       page styles
 static/js/index.js         navbar burger, "coming soon" links, BibTeX copy button
-static/images/             figures taken from the paper (Fig. 1-5) and the favicon
+static/images/             figures taken from the paper (Fig. 1-6), the video poster and the favicon
+static/videos/hvlr_demo.mp4 demo video (H.264, 1080p, 42 s)
 .nojekyll                  tells GitHub Pages to serve the files as-is
 ```
 
@@ -35,5 +36,4 @@ Search `index.html` for `TODO`:
 | What | Where |
 | --- | --- |
 | arXiv / Code / Data / Model Weights URLs | the four buttons under the authors: replace `href="#"` and delete `data-placeholder` |
-| Demo video | the `#video` section: replace the placeholder `<div>` with the YouTube `<iframe>` or the `<video>` template in the comment (put a self-hosted file at `static/videos/demo.mp4`) |
 | arXiv ID | `#bibtex` section |

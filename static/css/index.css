@@ -133,36 +133,12 @@ body {
 }
 
 .publication-video iframe,
-.publication-video video,
-.publication-video .video-placeholder {
+.publication-video video {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-}
-
-.video-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at 30% 20%, #2c5578 0%, #1c2f44 55%, #121c28 100%);
-  color: #ffffff;
-}
-
-.video-placeholder-icon {
-  width: 4.5rem;
-  height: 4.5rem;
-  fill: rgba(255, 255, 255, 0.85);
-}
-
-.video-placeholder-text {
-  margin-top: 0.9rem;
-  font-family: 'Google Sans', sans-serif;
-  font-size: 1.15rem;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.85);
 }
 
 /* ---------------- Figures ---------------- */
