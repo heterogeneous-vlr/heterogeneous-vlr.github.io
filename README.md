@@ -29,6 +29,10 @@ This repository is `heterogeneous-vlr/heterogeneous-vlr.github.io`, so GitHub Pa
 `https://heterogeneous-vlr.github.io/`. In **Settings → Pages**, *Source* should be *Deploy from a branch*,
 branch `main`, folder `/ (root)`. Every push to `main` redeploys the site within a minute or two.
 
+GitHub Pages only serves public repositories on the free organization plan. While the repository is private the
+site is offline and pushes do not deploy. After making it public again, push a commit to `main` (or re-save the
+settings in **Settings → Pages**) to build and publish the current version.
+
 ## Things to fill in
 
 Search `index.html` for `TODO`:
