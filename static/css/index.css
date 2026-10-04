@@ -3,6 +3,7 @@
 :root {
   --hvlr-orange: #e0875a;
   --hvlr-orange-light: #fbeee6;
+  --hvlr-badge: #b5531f;
   --hvlr-blue: #1f5f8b;
   --hvlr-blue-dark: #1c3d5a;
   --hvlr-text-muted: #6b6b6b;
@@ -104,6 +105,13 @@ body {
 }
 
 .publication-affiliations {
+  color: #4a4a4a;
+  margin-bottom: 0.3rem;
+}
+
+.publication-note {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1rem;
   color: #4a4a4a;
   margin-bottom: 1.25rem;
 }
@@ -346,13 +354,18 @@ body {
 }
 
 .finding-label {
+  display: inline-block;
   font-family: 'Google Sans', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--hvlr-orange);
-  margin-bottom: 0.25rem !important;
+  color: #ffffff;
+  background-color: var(--hvlr-badge);
+  padding: 0.3rem 0.85rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(181, 83, 31, 0.25);
+  margin-bottom: 0.6rem !important;
 }
 
 .content .finding-subtitle {
