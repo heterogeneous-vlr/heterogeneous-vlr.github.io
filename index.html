@@ -145,7 +145,7 @@
              alt="Overview of HVLR: eight heterogeneous reasoning forms (bbox highlight, scene graph, helper image, segmentation, bbox crop, depth, edge, text CoT) are rendered into pixel space and supervise a shared latent space; at inference the MLLM generates latent reasoning states between thinking markers and then the answer.">
       </a>
       <figcaption>
-        <b>Overview of HVLR.</b> <i>Top (training):</i> Eight heterogeneous reasoning forms are rendered as helper
+        Figure 1: <b>Overview of HVLR.</b> <i>Top (training):</i> Eight heterogeneous reasoning forms are rendered as helper
         images and internalized into latent slots. <i>Bottom (inference):</i> Given only the image and question,
         our model generates latent states for reasoning and then the answer.
       </figcaption>
@@ -195,19 +195,26 @@
         <h2 class="title is-3">Introduction</h2>
         <div class="content has-text-justified">
           <p>
-            Visual reasoning has been approached through increasingly diverse intermediate representations: textual
-            chains of thought, region crops, scene graphs, segmentation and depth maps, and visual manipulations. These
-            forms capture complementary aspects of reasoning, yet because their structures differ so much they are
-            usually modeled separately, each with its own prediction head, decoder or specialized system, which scales
-            poorly as more forms are added. We ask whether heterogeneous forms of visual reasoning can instead be
-            <strong>unified in a single shared latent space</strong>. <strong>HVLR</strong> does this in two steps. It
-            first <strong>renders every reasoning form into a common pixel space</strong> and encodes it with the
-            same vision encoder, giving all eight forms one supervision interface without dedicated heads. It
-            then uses a <strong>two-stage distillation</strong> procedure, a latent teacher followed by a closed-book
-            student, to turn that supervision into autoregressive latent states the model generates by itself, so no
-            explicit intermediate representation is needed at inference. The resulting model improves Qwen2.5-VL-7B
-            from 64.66 to 69.97 average accuracy over nine benchmarks, grows stronger as more reasoning forms share the
-            same data budget, and reasons in 8 latent steps instead of roughly 177 decoded tokens.
+            One of the foundational ideas in computer vision is that visual understanding is rooted in intermediate
+            representations that make useful properties of the scene explicit. Edges expose boundaries and shape;
+            segmentation exposes objects and regions; depth exposes geometric structure; and scene graphs expose objects
+            and their relations. Recent visual reasoning methods exploit many of these representations, but they
+            typically assume a particular representation for a particular reasoning mechanism. Yet there is no
+            &ldquo;magic&rdquo; representation for all visual reasoning problems, and different tasks may benefit from
+            different representations, or combinations thereof.
+          </p>
+          <p>
+            HVLR uses these perceptual representations as priors that regularize how a model learns to reason. The
+            model is exposed to multiple representations during training and reasons without them at inference, using
+            a visual reasoning scratchpad, an internal workspace composed of a sequence of latent states. Each prior is
+            expressed visually, so all priors are processed by the same vision encoder and mapped into the scratchpad in
+            a unified manner. A two-stage training procedure first learns the mapping from the priors to the
+            scratchpad, then distills the scratchpad into a model that has no access to the priors as inputs. Training
+            with eight perceptual priors improves Qwen2.5-VL-7B from 64.66 to 69.97 average accuracy across nine
+            benchmarks, and increasing the number of priors from 1 to 3, 5, and 8 increases average performance from
+            66.65 to 67.67, 68.61, and 69.97. For priors that admit textual serialization, latent reasoning achieves
+            higher accuracy while reducing intermediate computation from roughly 177 generated tokens to 8 latent
+            steps.
           </p>
         </div>
       </div>
@@ -226,34 +233,28 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full content">
-        <h2 class="title is-3 has-text-centered">Unified Pixel-Space Supervision</h2>
+        <h2 class="title is-3 has-text-centered">Collection of Heterogeneous Visual Reasoning Data</h2>
         <p class="has-text-justified">
-          HVLR collects eight representative reasoning forms and rasterizes each of them into a <em>helper image</em>
-          that is processed by the same vision encoder, so linguistic, symbolic, spatial and perceptual reasoning
-          signals can all supervise the same latent space. Interleaved reasoning (labelled "Helper Image" in the
-          overview figure) contributes one to three intermediate images. After curation the corpus contains 1.31M
-          examples; unless
-          otherwise specified, all experiments use the same balanced 40K subset with 5K examples per form.
+          To provide a common supervision interface, we rasterize every reasoning representation into an image and
+          process it with the same vision encoder. This allows linguistic, symbolic, spatial, and perceptual reasoning
+          signals to supervise the same latent space without dedicated prediction heads. We collect eight
+          representative reasoning forms. <b>Text CoT</b> renders textual rationales on a blank canvas;
+          <b>Scene Graph</b> visualizes objects and relations as node&ndash;edge diagrams; <b>BBox Crop</b> and
+          <b>BBox Highlight</b> isolate or emphasize question-relevant regions; <b>Segmentation</b>, <b>Depth</b>, and
+          <b>Edge</b> expose complementary dense visual structure; and <b>Interleaved</b> reasoning (&ldquo;Helper
+          Image&rdquo; in Figure 1) provides one to three intermediate images from multi-step visual reasoning traces.
+          After curation, the full corpus contains 1.31M examples; unless otherwise specified, all experiments use the
+          same balanced 40K subset, with 5K examples each form.
         </p>
-        <div class="form-tags" role="list" aria-label="The eight reasoning forms">
-          <span class="tag is-medium form-tag" role="listitem">Text CoT</span>
-          <span class="tag is-medium form-tag" role="listitem">Scene Graph</span>
-          <span class="tag is-medium form-tag" role="listitem">BBox Crop</span>
-          <span class="tag is-medium form-tag" role="listitem">BBox Highlight</span>
-          <span class="tag is-medium form-tag" role="listitem">Segmentation</span>
-          <span class="tag is-medium form-tag" role="listitem">Depth</span>
-          <span class="tag is-medium form-tag" role="listitem">Edge</span>
-          <span class="tag is-medium form-tag" role="listitem">Interleaved</span>
-        </div>
 
-        <h2 class="title is-3 has-text-centered mt-6">Two-Stage Latent Distillation</h2>
+        <h2 class="title is-3 has-text-centered mt-6">Two-Stage Training</h2>
         <figure class="paper-figure">
           <a class="figure-link" href="static/images/method.jpg" target="_blank" rel="noopener" title="Open full-size figure">
             <img src="static/images/method.jpg" width="2400" height="1048" loading="lazy"
                  alt="Training overview. Stage 1 trains a latent teacher MLLM that reads the image, question and helper image, generates teacher latents that are aligned with encoded helper features, and re-inserts them so the answer only sees the helpers through the latents. Stage 2 distills a closed-book student MLLM that generates student latents from the image and question alone.">
           </a>
           <figcaption>
-            <b>Training overview.</b> Stage 1 trains a teacher that summarizes the helper images into latent slots.
+            Figure 2: <b>Training overview.</b> Stage 1 trains a teacher that summarizes the helper images into latent slots.
             Stage 2 trains a student to generate these latent slots from the image and question alone, supervised by
             the features exported from the Stage-1 teacher.
           </figcaption>
@@ -262,26 +263,27 @@
         <div class="columns stage-columns">
           <div class="column">
             <div class="box stage-box">
-              <p class="stage-label">Stage 1</p>
-              <p class="stage-title">Latent Teacher</p>
+              <p class="stage-title">Teacher Model</p>
               <p class="has-text-justified">
-                The teacher reads the helper images and autoregressively generates a block of <i>L</i>&nbsp;=&nbsp;8
-                latent slots per helper, each reusing the previous last-layer hidden state as its next input embedding.
-                The slots are then re-inserted while an attention mask stops the answer from attending to the helpers,
-                so helper information must flow through the latents. A cosine alignment loss ties the latent states to
-                the frozen base model's features of the same helpers.
+                Each helper is compressed into a block of <i>L</i>&nbsp;=&nbsp;8 latent slots, and each slot reuses the
+                preceding last-layer hidden state as the next input embedding. Each training step uses two forward
+                passes. In the first, the teacher observes the helper images and autoregressively generates the latent
+                slots. In the second, these slots are reinserted into the sequence, while an attention mask prevents the
+                answer positions from directly attending to the helpers, so information from the helpers must be
+                mediated through the latent slots. To preserve the helper content, the latent states are aligned with
+                representations extracted from the same helpers by a frozen base model.
               </p>
             </div>
           </div>
           <div class="column">
             <div class="box stage-box">
-              <p class="stage-label">Stage 2</p>
-              <p class="stage-title">Closed-Book Student</p>
+              <p class="stage-title">Student Model</p>
               <p class="has-text-justified">
-                The helpers are removed. A student initialized from the base model learns to regenerate the Stage-1
-                latent states from the original image and question alone, aligned layer by layer to the frozen
-                teacher's states. At inference it receives only the image and question, generates the latent reasoning
-                states, and decodes the answer: no helper image, rationale text or reasoning decoder is needed.
+                The student is initialized from the base model and has no access to the helpers. It learns to
+                reconstruct the teacher&rsquo;s latent states from the original image and question alone, using targets
+                precomputed by the frozen teacher at each latent position and layer. At inference, the student receives
+                only the image and question, generates the latent reasoning states, and then decodes the answer. No
+                helper image, rationale text, or dedicated reasoning decoder is required.
               </p>
             </div>
           </div>
@@ -306,9 +308,8 @@
       <div class="column is-full has-text-centered content">
         <h2 class="title is-3">Main Results</h2>
         <p class="table-intro">
-          Scores (%) on nine benchmarks (POPE is F1; QSpatial++ is the success rate within a factor of two).
-          <b>Bold</b> = best per column among same-protocol rows. Frontier-model rows (gray, <sup>‡</sup>) are
-          reported numbers taken from published papers.
+          Table 2: <b>Main results</b> on nine benchmarks. <b>Bold</b> = best per column among same-protocol rows.
+          Frontier-model rows (gray) are <i>reported</i> numbers taken from published papers.
         </p>
         <div class="table-container" tabindex="0" role="region" aria-label="Main results table">
           <table class="results-table" id="main-results">
@@ -396,9 +397,9 @@
           </table>
         </div>
         <p class="table-note has-text-justified">
-          HVLR improves on its base and attains the highest average score among all same-protocol rows, +1.9 above the
-          best latent-reasoning baseline (CoVT-7B). It also exceeds the best tool-using agent, DeepEyes, with a single
-          closed-book pass instead of a multi-pass zoom-in loop.
+          Table 2 evaluates three model families. Our model improves on its base and attains the highest average score
+          among all same-protocol rows, +1.9 above the best latent-reasoning baseline (CoVT-7B). It also exceeds the
+          best tool-using agent, DeepEyes, with a single closed-book pass instead of a multi-pass zoom-in loop.
         </p>
       </div>
     </div>
@@ -410,20 +411,23 @@
         <h2 class="title is-3">More Forms, Stronger Model: Capability Scales with Latent Diversity</h2>
         <div class="box finding-box">
           <p class="finding-claim">
-            The capability of latent reasoning scales with the diversity of the content the space must host: packing
-            more forms of thought in one latent space yields a stronger model.
+            The capability of latent reasoning scales with the <em>diversity</em> of the content the space must host:
+            packing more forms of thought in one latent space yields a stronger model.
+          </p>
+          <p class="finding-text has-text-justified">
+            <b>Design.</b> We fix the budget at 40K and vary <i>only</i> the number of forms it spans: <i>K</i>=1 gives
+            the whole budget to a single form (8 models, one per form); <i>K</i>=3 and <i>K</i>=5 each draw 8
+            <i>random</i> combinations with 40K examples in total; <i>K</i>=8 is the model of Table 2.
           </p>
           <a class="figure-link" href="static/images/finding1_diversity.png" target="_blank" rel="noopener" title="Open full-size figure">
             <img src="static/images/finding1_diversity.png" width="1348" height="497" loading="lazy"
                  alt="Three plots: (a) average score rises with the number of reasoning forms K from 1 to 8; (b) all 25 ablations plus base ranked by average score, with the 8-form model first and base last; (c) the per-benchmark slope against K is positive on all nine benchmarks.">
           </a>
           <p class="finding-caption has-text-justified">
-            With a fixed 40K budget, we vary the number of forms <i>K</i> (8 single-form models, 8 random
-            combinations each for <i>K</i>=3 and <i>K</i>=5, and the full <i>K</i>=8 model). <b>(a)</b> The tier-mean
-            average score rises monotonically with <i>K</i> (OLS +0.483 points per form, Spearman ρ=0.88).
-            <b>(b)</b> Ranking all 25 ablations plus base by average score, the 8-form model ranks first, the eight
-            random <i>K</i>=5 subsets occupy ranks 2–9, and base ranks last.
-            <b>(c)</b> Refitting the slope on each benchmark separately gives a positive trend on all nine.
+            Figure 3: <b>Modality-count ablation</b>. <b>(a)</b> average score vs. number of forms <i>K</i>: tier means
+            (solid) rise monotonically; OLS +0.483/form, Spearman <i>&rho;</i>=0.88. <b>(b)</b> All 25 ablations + base
+            ranked by average score: ours ranks #1, the eight random <i>K</i>=5 subsets occupy #2&ndash;9, and base
+            ranks last. <b>(c)</b> Refitting the slope on each benchmark separately: all nine are positive.
           </p>
         </div>
       </div>
@@ -439,26 +443,30 @@
             Keeping intermediate thought in the latent space dominates decoding it into text: carried in vectors, the
             same reasoning reaches higher accuracy at a fraction of the inference cost.
           </p>
+          <p class="finding-text has-text-justified">
+            Text CoT and scene graphs can be written out faithfully as text, which lets us test whether a form is better
+            internalized in the latent space or emitted as text.
+          </p>
           <a class="figure-link" href="static/images/finding2_latent_vs_text.png" target="_blank" rel="noopener" title="Open full-size figure">
             <img src="static/images/finding2_latent_vs_text.png" width="1348" height="471" loading="lazy"
                  alt="Three plots comparing latent and decoded-text reasoning: (a) average score of variants that supervise text CoT, scene graph or both as explicit text, under free routing, forced latent and forced text decoding, all below the all-latent model; (b) the same runs against think steps; (c) think tokens per question: Ours 9, SkiLa 29.3, Monet 129.1, PixelReasoner 159.5, DeepEyes 179.6.">
           </a>
           <p class="finding-caption has-text-justified">
-            Three variants supervise the text-CoT portion, the scene-graph portion, or both as decoded text while all
-            other forms stay latent. <b>(a)</b> No variant reaches the all-latent model (dashed line) under any
-            inference mode. <b>(b)</b> The latent block takes 8 think steps per question against roughly 177 for a
-            decoded text CoT. <b>(c)</b> Think tokens per question across methods (ours: the 8 latent steps occupy 9
-            sequence positions).
+            Figure 4: <b>Latent versus explicit decoded-text reasoning.</b> Three variants supervise the text-CoT
+            portion, the scene-graph portion, or both as decoded text while all other forms stay latent; each is
+            evaluated with free routing, forced latent or forced text decoding. The dashed line is our all-latent model.
+            <b>(a)</b> Average score over the nine benchmarks. <b>(b)</b> The same runs against think steps.
+            <b>(c)</b> Think tokens per question across methods, measured as in Fig. 5.
           </p>
           <a class="figure-link" href="static/images/finding2_efficiency.png" target="_blank" rel="noopener" title="Open full-size figure">
             <img class="mt-4" src="static/images/finding2_efficiency.png" width="1431" height="493" loading="lazy"
                  alt="Inference efficiency: (a) wall-clock latency per question relative to ours, from 1.00x for ours to 5.42x for SkiLa-7B; (b) decode TFLOPs, 0.294 for ours; (c) five-benchmark accuracy against latency, where every other method is slower and less accurate than ours.">
           </a>
           <p class="finding-caption has-text-justified">
-            Inference efficiency on V<sup>⋆</sup>, HR-Bench 4K/8K, RealWorldQA and QSpatial++. <b>(a)</b> Latency per
-            question, with the ratio to ours. <b>(b)</b> Decode FLOPs computed from token counts; all methods share one
-            backbone. <b>(c)</b> Mean accuracy over the five benchmarks against latency: every other method is both
-            slower and less accurate than ours.
+            Figure 5: <b>Inference efficiency</b> on V<sup>⋆</sup>, HR-Bench 4K/8K, RealWorldQA and QSpatial++.
+            <b>(a)</b> Latency per question, with the ratio to ours. <b>(b)</b> Decode FLOPs computed from token
+            counts; all methods share one backbone. <b>(c)</b> Mean accuracy over the five benchmarks against latency;
+            the shaded region marks methods that are both slower and less accurate than ours.
           </p>
         </div>
       </div>
@@ -474,7 +482,14 @@
             The benefit of heterogeneous latent supervision transfers across model scales, backbones, and training
             recipes.
           </p>
-          <h3 class="title is-5 finding-subtitle">Cross-backbone transfer</h3>
+          <p class="finding-text has-text-justified">
+            The same data and training stages also improve a smaller (Qwen2.5-VL-3B) and a newer (Qwen3-VL-8B) backbone
+            (Table 3), as well as a modified LVR-style recipe (Table 4).
+          </p>
+          <p class="table-caption has-text-justified">
+            Table 3: <b>Cross-backbone transfer.</b> Other backbones trained with the same data and training pipeline
+            also improve over the base models.
+          </p>
           <div class="columns is-centered">
             <div class="column is-half">
               <p class="mini-table-title">Qwen2.5-VL-3B</p>
@@ -507,28 +522,28 @@
               </div>
             </div>
           </div>
-          <p class="finding-caption has-text-justified">
-            The same data and training stages also improve a smaller (Qwen2.5-VL-3B) and a newer (Qwen3-VL-8B)
-            backbone.
-          </p>
-
-          <h3 class="title is-5 finding-subtitle">Cross-recipe transfer</h3>
-          <p class="finding-caption has-text-justified">
-            We adapt LVR into a pipeline that shares only the data and the latent interface with ours. Training is a
-            single teacher-forced stage without distillation: the rendered helper's visual features fill the latent
-            slots as inputs, and a trainable prediction head predicts each slot from the hidden state at the preceding
-            position, trained with an alignment loss, the answer cross-entropy and a contrastive term that keeps the
-            latents sample-specific. At inference the helper is absent and the head generates the latent slots
-            autoregressively.
+          <p class="finding-text has-text-justified">
+            We adapt LVR into a pipeline that shares only the data and the latent interface with ours (Fig. 6). Training
+            is a <i>single</i> teacher-forced stage without distillation: the rendered helper&rsquo;s visual features
+            fill the latent slots as inputs, and a trainable prediction head predicts each slot from the hidden state at
+            the preceding position, trained with an alignment loss, the answer cross-entropy and a contrastive term that
+            keeps the latents sample-specific. At inference the helper is absent and the head generates the latent slots
+            autoregressively. Trained on 500K examples of our corpus, this pipeline gains 3.47 points of average score
+            over its base and surpasses the publicly released LVR checkpoint by 5.03 points, most notably on QSpatial++
+            (Table 4).
           </p>
           <a class="figure-link lvr-figure" href="static/images/lvr_style.jpg" target="_blank" rel="noopener" title="Open full-size figure">
             <img src="static/images/lvr_style.jpg" width="1600" height="901" loading="lazy"
                  alt="LVR-style training pipeline. Top: the image and question go into the MLLM, which produces latents z1 to zm and then the answer; the helper image is encoded by a visual encoder into helper features that supervise the latents. Bottom: like token prediction from a hidden state through the LM head, an LVR head (GLU) predicts each latent from the preceding hidden state and is trained with an alignment loss against the helper feature.">
           </a>
           <p class="finding-caption has-text-justified">
-            <b>LVR-style training pipeline.</b> <i>Top (Overview):</i> Helper image is encoded by visual encoder as
+            Figure 6: <b>LVR-style training pipeline.</b> <i>Top (Overview):</i> Helper image is encoded by visual encoder as
             ground truth to supervise latent. <i>Bottom (Details):</i> latent is predicted from preceding hidden state
             like a text token.
+          </p>
+          <p class="table-caption has-text-justified">
+            Table 4: <b>Cross-recipe transfer.</b> A modified LVR-style recipe trained on our dataset, against its base
+            and against the publicly released LVR checkpoint.
           </p>
           <div class="table-container" tabindex="0" role="region" aria-label="Cross-recipe transfer results">
             <table class="results-table mini-table lvr-table">
@@ -547,11 +562,6 @@
               </tbody>
             </table>
           </div>
-          <p class="finding-caption has-text-justified">
-            A modified LVR-style recipe trained on our dataset, against its base and against the publicly released LVR
-            checkpoint. Trained on 500K examples of our corpus, this pipeline gains 3.47 points of average score over its
-            base and surpasses the publicly released LVR checkpoint by 5.03 points, most notably on QSpatial++.
-          </p>
         </div>
       </div>
     </div>
