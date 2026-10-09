@@ -87,7 +87,7 @@
           </div>
           <div class="publication-note"><sup>*</sup>Project Lead</div>
 
-          <!-- Links. TODO: replace each remaining href="#" with the real URL and delete its data-placeholder attribute.
+          <!-- Links. TODO (arXiv, Code): replace href="#" with the real URL and delete the data-placeholder attribute.
                Code (once public): https://github.com/yangruoliu/heterogeneous-visual-latent-reasoning -->
           <div class="publication-links">
             <span class="link-block">
@@ -109,7 +109,13 @@
               </a>
             </span>
             <span class="link-block">
-              <a href="#" data-placeholder class="external-link button is-normal is-rounded is-dark">
+              <a href="https://huggingface.co/datasets/HVLR/training-data-40k" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><svg class="svg-icon" aria-hidden="true"><use href="#i-database"></use></svg></span>
+                <span>Training Data (40K)</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://huggingface.co/HVLR/hvlr" target="_blank" rel="noopener" class="external-link button is-normal is-rounded is-dark">
                 <span class="icon emoji-icon" aria-hidden="true">🤗</span>
                 <span>Model Weights</span>
               </a>
@@ -171,7 +177,7 @@
             first render all reasoning representations into a shared pixel space and encode them with the same vision
             encoder. We then use a two-stage distillation procedure to translate these representations into
             autoregressive latent states and internalize them into a closed-book model that requires no explicit
-            intermediate representation at inference time. We conduct a systematic analysis with HVLR and uncovers three
+            intermediate representation at inference time. We conduct a systematic analysis with HVLR and uncover three
             main findings. First, heterogeneous reasoning forms can be effectively unified: combining all eight improves
             Qwen2.5-VL-7B from 64.66% to 69.97% average accuracy across nine benchmarks. Second, the shared latent space
             consistently benefits from reasoning diversity. Under a fixed 40K-example budget, increasing the number of

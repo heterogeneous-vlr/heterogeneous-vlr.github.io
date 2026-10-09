@@ -39,5 +39,5 @@ Search `index.html` for `TODO`:
 
 | What | Where |
 | --- | --- |
-| arXiv / Code / Model Weights URLs | the four buttons under the authors: replace `href="#"` and delete `data-placeholder` |
+| arXiv / Code URLs | the arXiv and Code buttons under the authors: replace `href="#"` and delete `data-placeholder` |
 | arXiv ID | `#bibtex` section |
